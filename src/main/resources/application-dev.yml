@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    security:
+      jwt-secret: ${JWT_SECRET}
+      jwt-expiration: ${JWT_EXPIRATION}
+
+  datasource:
+    url: ${DB_DEV_URL}
+    username: ${DB_DEV_USER}
+    password: ${DB_DEV_PASS}
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    org.springframework.security: debug

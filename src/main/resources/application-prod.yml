@@ -1,0 +1,19 @@
+server:
+  port: 5000
+
+spring:
+  application:
+    security:
+      jwt-secret: ${JWT_SECRET}
+      jwt-expiration: ${JWT_EXPIRATION}
+
+  datasource:
+    url: ${DB_PROD_URL}
+    username: ${DB_PROD_USER}
+    password: ${DB_PROD_PASS}
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect

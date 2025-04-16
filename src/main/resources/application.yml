@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: dev
+
+  application:
+    name: ecom-api
+    image-dir: images
+    jwt-cookie: jwt
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
