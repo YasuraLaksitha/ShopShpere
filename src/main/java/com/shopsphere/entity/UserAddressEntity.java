@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "tbl_user_address")
 public class UserAddressEntity {
 
     @Id

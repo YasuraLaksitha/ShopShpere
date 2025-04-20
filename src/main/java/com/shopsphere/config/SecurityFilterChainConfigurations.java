@@ -34,6 +34,11 @@ public class SecurityFilterChainConfigurations {
                         .requestMatchers("/api/v1/cart/user/**").permitAll()
                         .requestMatchers("/api/v1/address/**").permitAll()
                         .requestMatchers("/api/v1/order/**").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/actuator/**"
+                        ).permitAll()
                         .anyRequest().authenticated());
 
         return http.build();

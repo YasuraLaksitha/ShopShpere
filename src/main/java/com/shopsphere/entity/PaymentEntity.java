@@ -11,6 +11,7 @@ import com.shopsphere.utils.PaymentMethods;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "tbl_payment")
 public class PaymentEntity {
 
     @Id
