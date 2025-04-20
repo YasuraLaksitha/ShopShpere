@@ -129,3 +129,18 @@ CREATE INDEX idx_order_item_order ON tbl_order_item (order_id);
 CREATE INDEX idx_order_item_product ON tbl_order_item (product_id);
 CREATE INDEX idx_user_role_user ON tbl_user_role (user_id);
 CREATE INDEX idx_user_role_role ON tbl_user_role (role_id);
+
+INSERT INTO tbl_category (name)
+VALUES ('Laptops'),
+       ('Smartphones'),
+       ('Headphones'),
+       ('Monitors'),
+       ('Keyboards');
+
+INSERT INTO tbl_role (role_name)
+VALUES ('ROLE_ADMIN'),
+       ('ROLE_SELLER'),
+       ('ROLE_USER');
+
+INSERT INTO tbl_user (username, email, password)
+VALUES ('yasura', 'yasura.dev@gmail.com', '$2a$10$Q75v4rFBKD.ZbrFwGrZ2FugMf7c3ZMk7/YclJddW1CIS4CflL1r4G');

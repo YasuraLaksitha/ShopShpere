@@ -29,6 +29,7 @@ public class UserAddressEntity {
 
     @ToString.Exclude
     @ManyToOne
+    @JoinColumn(name = "user_address")
     private UserEntity user;
 
     @OneToMany(mappedBy = "userAddress")
