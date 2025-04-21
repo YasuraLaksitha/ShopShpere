@@ -35,9 +35,9 @@ CREATE TABLE tbl_product
     product_price         DECIMAL(10, 2) NOT NULL,
     product_special_price DECIMAL(10, 2),
     unavailable           BOOLEAN DEFAULT false,
-    user_id               BIGINT         NOT NULL,
+    seller_id             BIGINT         NOT NULL,
     category_id           BIGINT         NOT NULL,
-    CONSTRAINT fk_seller_product FOREIGN KEY (user_id) REFERENCES tbl_user (id) ON DELETE CASCADE,
+    CONSTRAINT fk_seller_product FOREIGN KEY (seller_id) REFERENCES tbl_user (id) ON DELETE CASCADE,
     CONSTRAINT fk_product_category FOREIGN KEY (category_id) REFERENCES tbl_category (id) ON DELETE RESTRICT
 );
 
@@ -118,7 +118,7 @@ CREATE TABLE tbl_user_role
 );
 
 -- Indexes
-CREATE INDEX idx_product_user ON tbl_product (user_id);
+CREATE INDEX idx_product_user ON tbl_product (seller_id);
 CREATE INDEX idx_product_category ON tbl_product (category_id);
 CREATE INDEX idx_cart_item_cart ON tbl_cart_item (cart_id);
 CREATE INDEX idx_cart_item_product ON tbl_cart_item (product_id);
@@ -130,6 +130,7 @@ CREATE INDEX idx_order_item_product ON tbl_order_item (product_id);
 CREATE INDEX idx_user_role_user ON tbl_user_role (user_id);
 CREATE INDEX idx_user_role_role ON tbl_user_role (role_id);
 
+-- values
 INSERT INTO tbl_category (name)
 VALUES ('Laptops'),
        ('Smartphones'),
