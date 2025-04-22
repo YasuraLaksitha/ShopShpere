@@ -4,7 +4,6 @@ spring:
 
   application:
     name: ecom-api
-    image-dir: images
     jwt-cookie: jwt
 
 frontend:

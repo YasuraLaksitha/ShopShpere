@@ -1,6 +1,5 @@
 package com.shopsphere.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import com.shopsphere.dto.PaginationResponseDTO;
 import com.shopsphere.dto.ProductDTO;
 import com.shopsphere.entity.CategoryEntity;
@@ -11,6 +10,9 @@ import com.shopsphere.repository.ProductRepository;
 import com.shopsphere.service.CartService;
 import com.shopsphere.service.FileService;
 import com.shopsphere.service.ProductService;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -33,8 +35,11 @@ public class ProductServiceImpl implements ProductService {
     private final FileService fileService;
     private final CartService cartService;
 
-    @Value("${spring.application.image-dir}")
+    @Value("${spring.application.image.dir}")
     private String imageDirName;
+
+    @Value("${spring.application.image.base-url}")
+    private String imageBaseUrl;
 
     @Override
     public ProductDTO save(ProductDTO productDTO, String categoryName) {
@@ -63,7 +68,11 @@ public class ProductServiceImpl implements ProductService {
                         pageRequest
                 );
         final Set<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
-                productEntity -> mapper.map(productEntity, ProductDTO.class)
+                productEntity -> {
+                    final ProductDTO productDTO = mapper.map(productEntity, ProductDTO.class);
+                    productDTO.setImage(createImageUrl(productDTO.getImage()));
+                    return productDTO;
+                }
         ).collect(Collectors.toSet());
 
         return PaginationResponseDTO.<ProductDTO>builder()
@@ -84,8 +93,13 @@ public class ProductServiceImpl implements ProductService {
         final PageRequest pageRequest = PageRequest.of(page, size);
         final Page<ProductEntity> productEntityPage =
                 productRepository.findAllByProductNameLikeIgnoreCaseAndUnavailableFalse(keyword, pageRequest);
+
         final Set<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
-                productEntity -> mapper.map(productEntity, ProductDTO.class)
+                productEntity -> {
+                    final ProductDTO productDTO = mapper.map(productEntity, ProductDTO.class);
+                    productDTO.setImage(createImageUrl(productDTO.getImage()));
+                    return productDTO;
+                }
         ).collect(Collectors.toSet());
 
         return PaginationResponseDTO.<ProductDTO>builder()
@@ -101,7 +115,7 @@ public class ProductServiceImpl implements ProductService {
         final ProductEntity productFromDB = productRepository.findByProductName(productName)
                 .orElseThrow(() -> new ResourceNotFoundException("product", productName, "name"));
 
-        final String filePath = fileService.uploadImage(productImage,imageDirName);
+        final String filePath = fileService.uploadImage(productImage, imageDirName);
         productFromDB.setImage(filePath);
         productRepository.save(productFromDB);
 
@@ -139,11 +153,15 @@ public class ProductServiceImpl implements ProductService {
 
         final Sort.Direction sortDirection = sortDir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
         final Sort sort = Sort.by(sortDirection, sortBy);
-        final PageRequest pageRequest = PageRequest.of(page, size,sort);
+        final PageRequest pageRequest = PageRequest.of(page, size, sort);
         final Page<ProductEntity> productEntityPage = productRepository.findAll(pageRequest);
 
         final Set<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
-                productEntity -> mapper.map(productEntity, ProductDTO.class)
+                productEntity -> {
+                    final ProductDTO productDTO = mapper.map(productEntity, ProductDTO.class);
+                    productDTO.setImage(createImageUrl(productDTO.getImage()));
+                    return productDTO;
+                }
         ).collect(Collectors.toSet());
 
         return PaginationResponseDTO.<ProductDTO>builder()
@@ -165,6 +183,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO save(final ProductDTO productDTO) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Contract(pure = true)
+    private @NotNull String createImageUrl(final String imageName) {
+        return imageBaseUrl.endsWith("/") ? imageBaseUrl + imageName : imageBaseUrl + "/" + imageName;
     }
 
 }
