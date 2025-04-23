@@ -35,6 +35,7 @@ public class SecurityFilterChainConfigurations {
                         .requestMatchers("/api/v1/address/**").permitAll()
                         .requestMatchers("/api/v1/order/**").permitAll()
                         .requestMatchers(
+                                "/images/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/actuator/**"

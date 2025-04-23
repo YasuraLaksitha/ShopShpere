@@ -29,6 +29,6 @@ public class FileServiceImpl implements FileService {
         final String filePath = imageDirName + File.separator + fileName;
         Files.copy(productImage.getInputStream(), Paths.get(filePath));
 
-        return filePath;
+        return filePath.substring("images/".length());
     }
 }

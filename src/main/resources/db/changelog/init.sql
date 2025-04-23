@@ -14,7 +14,7 @@ CREATE TABLE tbl_role
 CREATE TABLE tbl_category
 (
     id   BIGSERIAL PRIMARY KEY,
-    name VARCHAR(15) NOT NULL UNIQUE
+    name VARCHAR(30) NOT NULL UNIQUE
 );
 
 CREATE TABLE tbl_user
@@ -131,12 +131,13 @@ CREATE INDEX idx_user_role_user ON tbl_user_role (user_id);
 CREATE INDEX idx_user_role_role ON tbl_user_role (role_id);
 
 -- values
-INSERT INTO tbl_category (name)
-VALUES ('Laptops'),
-       ('Smartphones'),
-       ('Headphones'),
-       ('Monitors'),
-       ('Keyboards');
+INSERT INTO tbl_category (id,name)
+VALUES (1, 'Electronics'),
+       (2, 'Books'),
+       (3, 'Home Appliances'),
+       (4, 'Gaming'),
+       (5, 'Fitness & Health');
+
 
 INSERT INTO tbl_role (role_name)
 VALUES ('ROLE_ADMIN'),
