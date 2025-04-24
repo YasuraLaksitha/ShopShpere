@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -67,13 +68,13 @@ public class ProductServiceImpl implements ProductService {
                         category,
                         pageRequest
                 );
-        final Set<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
+        final List<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
                 productEntity -> {
                     final ProductDTO productDTO = mapper.map(productEntity, ProductDTO.class);
                     productDTO.setImage(createImageUrl(productDTO.getImage()));
                     return productDTO;
                 }
-        ).collect(Collectors.toSet());
+        ).toList();
 
         return PaginationResponseDTO.<ProductDTO>builder()
                 .page(page)
@@ -94,13 +95,13 @@ public class ProductServiceImpl implements ProductService {
         final Page<ProductEntity> productEntityPage =
                 productRepository.findAllByProductNameLikeIgnoreCaseAndUnavailableFalse(keyword, pageRequest);
 
-        final Set<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
+        final List<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
                 productEntity -> {
                     final ProductDTO productDTO = mapper.map(productEntity, ProductDTO.class);
                     productDTO.setImage(createImageUrl(productDTO.getImage()));
                     return productDTO;
                 }
-        ).collect(Collectors.toSet());
+        ).toList();
 
         return PaginationResponseDTO.<ProductDTO>builder()
                 .page(page)
@@ -149,26 +150,28 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public PaginationResponseDTO<ProductDTO> retrieveAll(final Integer page, final Integer size, final String sortBy,
-                                                         final String sortDir) {
+                                                         final String sortOrder) {
 
-        final Sort.Direction sortDirection = sortDir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        final Sort.Direction sortDirection = sortOrder.equalsIgnoreCase("asc") ?
+                Sort.Direction.ASC :
+                Sort.Direction.DESC;
         final Sort sort = Sort.by(sortDirection, sortBy);
-        final PageRequest pageRequest = PageRequest.of(page, size, sort);
+        final PageRequest pageRequest = PageRequest.of(page, 10, sort);
         final Page<ProductEntity> productEntityPage = productRepository.findAll(pageRequest);
 
-        final Set<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
+        final List<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
                 productEntity -> {
                     final ProductDTO productDTO = mapper.map(productEntity, ProductDTO.class);
                     productDTO.setImage(createImageUrl(productDTO.getImage()));
                     return productDTO;
                 }
-        ).collect(Collectors.toSet());
+        ).toList();
 
         return PaginationResponseDTO.<ProductDTO>builder()
                 .page(page)
                 .size(size)
                 .sortBy(sortBy)
-                .sortDir(sortDir)
+                .sortDir(sortOrder)
                 .contentSet(productDTOSet)
                 .isLast(productEntityPage.isLast())
                 .build();

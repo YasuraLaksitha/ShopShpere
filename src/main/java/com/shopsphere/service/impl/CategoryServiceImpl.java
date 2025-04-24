@@ -62,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
         return PaginationResponseDTO.<CategoryDTO>builder()
                 .contentSet(categoryEntities.getContent().stream().map(
                         categoryEntity -> mapper.map(categoryEntity, CategoryDTO.class)
-                ).collect(Collectors.toUnmodifiableSet()))
+                ).toList())
                 .page(page)
                 .sortDir(sortDir)
                 .sortBy(sortBy)

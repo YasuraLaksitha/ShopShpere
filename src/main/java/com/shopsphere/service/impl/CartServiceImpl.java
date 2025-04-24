@@ -92,7 +92,7 @@ public class CartServiceImpl implements CartService {
 
         final Page<CartEntity> cartEntityPage = cartRepository.findAll(pageRequest);
 
-        final Set<CartDTO> cartDTOSet = cartEntityPage.getContent().stream().map(cartEntity -> {
+        final List<CartDTO> cartDTOSet = cartEntityPage.getContent().stream().map(cartEntity -> {
             final CartDTO cartDTO = mapper.map(cartEntity, CartDTO.class);
 
             final List<ProductDTO> productDTOList = cartEntity.getCartItems().stream().map(item -> {
@@ -105,7 +105,7 @@ public class CartServiceImpl implements CartService {
             cartDTO.setProducts(productDTOList);
 
             return cartDTO;
-        }).collect(Collectors.toSet());
+        }).toList();
 
         return PaginationResponseDTO.<CartDTO>builder()
                 .contentSet(cartDTOSet)

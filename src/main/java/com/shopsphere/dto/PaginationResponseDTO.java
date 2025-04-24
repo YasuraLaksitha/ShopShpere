@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,5 +17,5 @@ public class PaginationResponseDTO<T> {
     private String sortBy;
     private String sortDir;
     private boolean isLast;
-    private Set<T> contentSet;
+    private List<T> contentSet;
 }

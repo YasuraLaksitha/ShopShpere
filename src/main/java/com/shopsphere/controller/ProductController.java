@@ -31,9 +31,9 @@ public class ProductController {
             @RequestParam(defaultValue = ApplicationDefaultConstants.PAGE_NUMBER, required = false) Integer page,
             @RequestParam(defaultValue = ApplicationDefaultConstants.PAGE_SIZE, required = false) Integer size,
             @RequestParam(defaultValue = ApplicationDefaultConstants.SORT_PRODUCTS_BY, required = false) String sortBy,
-            @RequestParam(defaultValue = ApplicationDefaultConstants.SORT_DIRECTION, required = false) String sortDir
+            @RequestParam(defaultValue = ApplicationDefaultConstants.SORT_DIRECTION, required = false) String sortOrder
     ) {
-        return new ResponseEntity<>(productService.retrieveAll(page, size, sortBy, sortDir), HttpStatus.OK);
+        return new ResponseEntity<>(productService.retrieveAll(page, size, sortBy, sortOrder), HttpStatus.OK);
     }
 
     @GetMapping("/public/categories/{categoryName}/products")

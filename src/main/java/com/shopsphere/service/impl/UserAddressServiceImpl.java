@@ -121,9 +121,9 @@ public class UserAddressServiceImpl implements UserAddressService {
 
         final Page<UserAddressEntity> entityPage = userAddressRepository.findAll(pageable);
 
-        final Set<UserAddressDTO> addressDTOS = entityPage.getContent().stream().map(entity ->
+        final List<UserAddressDTO> addressDTOS = entityPage.getContent().stream().map(entity ->
                         modelMapper.map(entity, UserAddressDTO.class))
-                .collect(Collectors.toSet());
+                .toList();
 
         return PaginationResponseDTO.<UserAddressDTO>builder()
                 .contentSet(addressDTOS)
