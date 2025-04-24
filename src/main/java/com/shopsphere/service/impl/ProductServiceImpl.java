@@ -166,7 +166,10 @@ public class ProductServiceImpl implements ProductService {
 
         if (StringUtils.isNotBlank(categoryName)) {
             spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("category").get("name")), categoryName)
+                    criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("category").get("name")),
+                            "%" + categoryName.toLowerCase() + "%"
+                    )
             );
         }
 
