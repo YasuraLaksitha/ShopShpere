@@ -10,6 +10,7 @@ import com.shopsphere.repository.ProductRepository;
 import com.shopsphere.service.CartService;
 import com.shopsphere.service.FileService;
 import com.shopsphere.service.ProductService;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -18,13 +19,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -149,15 +149,44 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PaginationResponseDTO<ProductDTO> retrieveAll(final Integer page, final Integer size, final String sortBy,
-                                                         final String sortOrder) {
+    public PaginationResponseDTO<ProductDTO> retrieveAll
+            (
+                    final Integer page,
+                    final Integer size,
+                    final String sortBy,
+                    final String sortOrder,
+                    final String keyword,
+                    final String categoryName
+            ) {
+
+        Specification<ProductEntity> spec = Specification.where(null);
+        if (StringUtils.isNotBlank(keyword)) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(
+                            criteriaBuilder.lower(
+                                    root.get("productName")),
+                            "%" + keyword.toLowerCase() + "%"
+                    )
+            );
+        }
+
+        if (StringUtils.isNotBlank(categoryName)) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(
+                            criteriaBuilder.lower(
+                                    root.get("category").get("name")),
+                            "%" + categoryName.toLowerCase() + "%"
+                    )
+            );
+        }
 
         final Sort.Direction sortDirection = sortOrder.equalsIgnoreCase("asc") ?
                 Sort.Direction.ASC :
                 Sort.Direction.DESC;
         final Sort sort = Sort.by(sortDirection, sortBy);
         final PageRequest pageRequest = PageRequest.of(page, size, sort);
-        final Page<ProductEntity> productEntityPage = productRepository.findAll(pageRequest);
+
+        final Page<ProductEntity> productEntityPage = productRepository.findAll(spec,pageRequest);
 
         final List<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
                 productEntity -> {
@@ -175,17 +204,6 @@ public class ProductServiceImpl implements ProductService {
                 .contentSet(productDTOSet)
                 .isLast(productEntityPage.isLast())
                 .build();
-    }
-
-    @Override
-    public ProductDTO retrieveByName(final String name) {
-        return null;
-    }
-
-    @Deprecated
-    @Override
-    public ProductDTO save(final ProductDTO productDTO) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Contract(pure = true)

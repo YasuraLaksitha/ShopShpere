@@ -28,12 +28,14 @@ public class ProductController {
 
     @GetMapping("/public/products")
     public ResponseEntity<PaginationResponseDTO<ProductDTO>> getAll(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category,
             @RequestParam(defaultValue = ApplicationDefaultConstants.PAGE_NUMBER, required = false) Integer page,
             @RequestParam(defaultValue = ApplicationDefaultConstants.PAGE_SIZE, required = false) Integer size,
             @RequestParam(defaultValue = ApplicationDefaultConstants.SORT_PRODUCTS_BY, required = false) String sortBy,
             @RequestParam(defaultValue = ApplicationDefaultConstants.SORT_DIRECTION, required = false) String sortOrder
     ) {
-        return new ResponseEntity<>(productService.retrieveAll(page, size, sortBy, sortOrder), HttpStatus.OK);
+        return new ResponseEntity<>(productService.retrieveAll(page, size, sortBy, sortOrder,keyword,category), HttpStatus.OK);
     }
 
     @GetMapping("/public/categories/{categoryName}/products")

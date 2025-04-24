@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-public interface ProductService extends CommonService<ProductDTO> {
+public interface ProductService {
 
     ProductDTO save(ProductDTO productDTO, String categoryName);
 
@@ -17,4 +17,9 @@ public interface ProductService extends CommonService<ProductDTO> {
     ProductDTO updateProductImage(String productName, MultipartFile productImage) throws IOException;
 
     void removeProductByName(String name);
+
+    ProductDTO update(ProductDTO productDTO);
+
+    PaginationResponseDTO<ProductDTO> retrieveAll
+            (Integer page, Integer size, String sortBy, String sortOrder, String keyword, String categoryName);
 }
