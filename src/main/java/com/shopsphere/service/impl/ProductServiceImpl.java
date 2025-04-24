@@ -150,14 +150,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public PaginationResponseDTO<ProductDTO> retrieveAll
-            (
-                    final Integer page,
-                    final Integer size,
-                    final String sortBy,
-                    final String sortOrder,
-                    final String keyword,
-                    final String categoryName
-            ) {
+            (final Integer page, final Integer size, final String sortBy, final String sortOrder,
+             final String keyword, final String categoryName) {
 
         Specification<ProductEntity> spec = Specification.where(null);
         if (StringUtils.isNotBlank(keyword)) {
@@ -172,11 +166,7 @@ public class ProductServiceImpl implements ProductService {
 
         if (StringUtils.isNotBlank(categoryName)) {
             spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.like(
-                            criteriaBuilder.lower(
-                                    root.get("category").get("name")),
-                            "%" + categoryName.toLowerCase() + "%"
-                    )
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("category").get("name")), categoryName)
             );
         }
 
@@ -186,7 +176,7 @@ public class ProductServiceImpl implements ProductService {
         final Sort sort = Sort.by(sortDirection, sortBy);
         final PageRequest pageRequest = PageRequest.of(page, size, sort);
 
-        final Page<ProductEntity> productEntityPage = productRepository.findAll(spec,pageRequest);
+        final Page<ProductEntity> productEntityPage = productRepository.findAll(spec, pageRequest);
 
         final List<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
                 productEntity -> {
