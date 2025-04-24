@@ -156,7 +156,7 @@ public class ProductServiceImpl implements ProductService {
                 Sort.Direction.ASC :
                 Sort.Direction.DESC;
         final Sort sort = Sort.by(sortDirection, sortBy);
-        final PageRequest pageRequest = PageRequest.of(page, 10, sort);
+        final PageRequest pageRequest = PageRequest.of(page, size, sort);
         final Page<ProductEntity> productEntityPage = productRepository.findAll(pageRequest);
 
         final List<ProductDTO> productDTOSet = productEntityPage.getContent().stream().map(
