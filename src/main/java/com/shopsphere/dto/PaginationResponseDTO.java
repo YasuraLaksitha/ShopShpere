@@ -16,6 +16,8 @@ public class PaginationResponseDTO<T> {
     private Integer size;
     private String sortBy;
     private String sortDir;
+    private Integer totalPages;
+    private Integer totalElements;
     private boolean isLast;
     private List<T> contentSet;
 }

@@ -193,6 +193,8 @@ public class ProductServiceImpl implements ProductService {
                 .page(page)
                 .size(size)
                 .sortBy(sortBy)
+                .totalPages(productEntityPage.getTotalPages())
+                .totalElements(productEntityPage.getNumberOfElements())
                 .sortDir(sortOrder)
                 .contentSet(productDTOSet)
                 .isLast(productEntityPage.isLast())
